@@ -1,0 +1,88 @@
+plugin.tx_medynamicform{
+	settings{
+		formFields {
+			introText {
+				type = DISPLAYTEXT
+				value = <p>Dies ist ein simpler Zwischen Text</p>
+			}
+			salutation {
+				type = SELECT
+				rules {
+
+				}
+				options {
+					0 = Bitte wählen
+					1 = Frau
+					2 = Herr
+				}
+				defaultValue = Frau
+			}
+
+			name {
+				type = INPUT
+				label = Name
+				rules {
+					minLength = 3
+					maxLength = 5
+					required = 1
+				}
+				placeHolder = Name
+				defaultValue = DefaultName
+			}
+
+			email {
+				type = INPUT
+				specialType = email
+				label = E-Mail-Adresse
+				rules {
+					required = 1
+					email = 1
+				}
+				placeHolder = 1
+			}
+
+			privacyPolicity {
+				type = CHECKBOX
+				label = Datenschutzerklärung
+				labelLinkPid = 123
+				checked = 1
+
+			}
+		}
+
+		formConfiguration {
+			#if return false => no email sent
+			preSendMailProcessor = MoveElevator\MeDynamicForm\Processor\DoSomething
+			#do anything after sending Mail
+			postSendMailProcessor = MoveElevator\MeDynamicForm\Processor\DoSomething
+
+			saveSendFormDataToDb = 1
+			#sets an expired date -> scheduler task remove expired dataå
+			daysSinceExpiresFormDbData = 30
+			#track user-agent and ip
+			anonymizedFormData = 0
+
+			#send form data just available after doubleOptIn is success
+			doubleOptIn = 1
+			#which field is used, alternativ idea => fe_user:email or fe_user:username can be used
+			doubleOptInField = email
+		}
+
+		mailSettings {
+			adminMail = 1
+			adminMail {
+				receiver = sef@move-elevator.de
+				name = Sascha Seyfert
+				from = kickstarter@move-elevator.de
+				subject = Admin-Mail Subject from Kickstarter
+			}
+			customerMail = 1
+			customerMail {
+				receiverField = email
+				#receiverTo Name, Concat fields to generate first and last name entry
+				nameField = firstName,name
+			}
+		}
+
+	}
+}

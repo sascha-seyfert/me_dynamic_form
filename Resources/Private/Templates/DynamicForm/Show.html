@@ -1,0 +1,13 @@
+<f:for each="{settings.formFields}" as="field">
+	<f:switch expression="{field.type}">
+		<f:case value="CHECKBOX">
+			checkbox
+		</f:case>
+		<f:case value="SELECT">
+			select
+		</f:case>
+		<f:case value="INPUT">
+			input
+		</f:case>
+	</f:switch>
+</f:for>
