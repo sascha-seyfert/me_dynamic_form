@@ -1,2 +1,3 @@
-<label for="{formName}-{fieldName}">{field.label}</label>
-<input id="{formName}-{fieldName}" type="checkbox" name="tx_medynamicform_dynamicform[{formName}][{fieldName}]" value="{field.label}" />
+<f:render partial="Label" arguments="{_all}"/>
+<input id="{formName}-{fieldName}" type="checkbox" name="tx_medynamicform_dynamicform[{formName}][{fieldName}]"
+	   value="{field.label}"/>
