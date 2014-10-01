@@ -1,13 +1,22 @@
-<f:for each="{settings.formFields}" as="field">
-	<f:switch expression="{field.type}">
-		<f:case value="CHECKBOX">
-			checkbox
-		</f:case>
-		<f:case value="SELECT">
-			select
-		</f:case>
-		<f:case value="INPUT">
-			input
-		</f:case>
-	</f:switch>
-</f:for>
+<f:form name="{formName}">
+	<f:for each="{settings.formFields}" key="fieldName" as="field">
+		<f:switch expression="{field.type}">
+			<f:case value="CHECKBOX">
+				<f:render partial="CheckBox"
+						  arguments="{formName: settings.formName, fieldName: fieldName, field: field}"/>
+			</f:case>
+			<f:case value="SELECT">
+				<f:render partial="SelectBox"
+						  arguments="{formName: settings.formName, fieldName: fieldName, field: field}"/>
+			</f:case>
+			<f:case value="INPUT">
+				<f:render partial="Input"
+						  arguments="{formName: settings.formName, fieldName: fieldName, field: field}"/>
+			</f:case>
+			<f:case value="SUBMIT">
+				<f:render partial="SubmitButton"
+						  arguments="{formName: settings.formName, fieldName: fieldName, field: field}"/>
+			</f:case>
+		</f:switch>
+	</f:for>
+</f:form>

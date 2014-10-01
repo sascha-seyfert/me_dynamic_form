@@ -1,0 +1,6 @@
+<label for="{formName}-{fieldName}">{field.label}</label>
+<select id="{formName}-{fieldName}" name="{fieldName}">
+	<f:for each="{field.options}" key="optionValue" as="option">
+		<option value="{optionValue}">{option}</option>
+	</f:for>
+</select>
