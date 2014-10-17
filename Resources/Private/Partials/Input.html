@@ -1,3 +1,16 @@
 <f:render partial="Label" arguments="{_all}"/>
-<input id="{formName}-{fieldName}" type="{field.inputType}" name="tx_medynamicform_dynamicform[{formName}][{fieldName}]" placeholder="{field.placeHolder}"
-	   value="{field.defaultValue}"/>
+<f:if condition="{field.addon}">
+	<f:then>
+		<div class="input-group">
+			<span class="input-group-addon">{field.addon}</span>
+			<input id="{formName}-{fieldName}" type="{field.inputType}" name="tx_medynamicform_dynamicform[{formName}][{fieldName}]" placeholder="{field.placeHolder}"
+				   value="{field.defaultValue}"
+				   class="form-control"/>
+		</div>
+	</f:then>
+	<f:else>
+		<input id="{formName}-{fieldName}" type="{field.inputType}" name="tx_medynamicform_dynamicform[{formName}][{fieldName}]" placeholder="{field.placeHolder}"
+			   value="{field.defaultValue}"
+			   class="form-control"/>
+	</f:else>
+</f:if>

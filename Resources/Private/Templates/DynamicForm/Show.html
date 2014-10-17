@@ -1,22 +1,22 @@
 <f:form name="{formName}">
-	<f:for each="{settings.formFields}" key="fieldName" as="field">
-		<f:switch expression="{field.type}">
-			<f:case value="CHECKBOX">
-				<f:render partial="CheckBox"
-						  arguments="{formName: settings.formName, fieldName: fieldName, field: field}"/>
-			</f:case>
-			<f:case value="SELECT">
-				<f:render partial="SelectBox"
-						  arguments="{formName: settings.formName, fieldName: fieldName, field: field}"/>
-			</f:case>
-			<f:case value="INPUT">
-				<f:render partial="Input"
-						  arguments="{formName: settings.formName, fieldName: fieldName, field: field}"/>
-			</f:case>
-			<f:case value="SUBMIT">
-				<f:render partial="SubmitButton"
-						  arguments="{formName: settings.formName, fieldName: fieldName, field: field}"/>
-			</f:case>
-		</f:switch>
-	</f:for>
+	<f:if condition="{settings.formPages}">
+		<f:then>
+			<h3>{settings.formPages.1.label}</h3>
+			<f:for each="{settings.formPages.1.fields}" key="fieldName" as="field">
+				<f:render partial="Field"
+						  arguments="{_all}"/>
+			</f:for>
+			<h3>{settings.formPages.2.label}</h3>
+			<f:for each="{settings.formPages.2.fields}" key="fieldName" as="field">
+				<f:render partial="Field"
+						  arguments="{_all}"/>
+			</f:for>
+		</f:then>
+		<f:else>
+			<f:for each="{settings.formFields}" key="fieldName" as="field">
+				<f:render partial="Field"
+						  arguments="{_all}"/>
+			</f:for>
+		</f:else>
+	</f:if>
 </f:form>

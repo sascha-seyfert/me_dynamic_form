@@ -1,5 +1,5 @@
 <f:render partial="Label" arguments="{_all}"/>
-<select id="{formName}-{fieldName}" name="{fieldName}">
+<select id="{formName}-{fieldName}" name="{fieldName}" class="form-control">
 	<f:for each="{field.options}" key="optionValue" as="option">
 		<option value="{optionValue}">{option}</option>
 	</f:for>
