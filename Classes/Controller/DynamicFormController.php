@@ -38,6 +38,7 @@ class DynamicFormController extends ActionController {
 		if ($this->request->hasArgument('fields')) {
 			/** @var \MoveElevator\MeDynamicForm\Domain\Model\SendForm' $sendForm */
 			$sendForm = $this->objectManager->get('\MoveElevator\MeDynamicForm\Domain\Model\SendForm');
+			$sendForm->setForm($this->settings['formName']);
 			foreach($this->request->getArgument('fields') as $field => $value) {
 				$sendForm->setValueByField($field, $value);
 			}
@@ -50,7 +51,8 @@ class DynamicFormController extends ActionController {
 	 * @return void
 	 */
 	public function sendAction(SendForm $sendForm) {
-		\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($sendForm->getName());
+		\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($sendForm);
+		\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($sendForm->getPrivacyPolicity());
 	}
 
 	/**
