@@ -90,16 +90,16 @@ class DynamicFormController extends ActionController {
 	 */
 	protected function sendAdminMail(SendForm $sendForm) {
 		$view = $this->objectManager->get('TYPO3\CMS\Fluid\View\StandaloneView');
-			foreach ($fields as $field => $value) {
+
 		$templateFile = $this->settings['mailSettings']['adminMail']['templateFile'];
 		if (!$templateFile || !is_readable($templateFile)) {
 			$view->setTemplatePathAndFilename(ExtensionManagementUtility::extPath('me_dynamic_form') . 'Resources/Private/Templates/Mails/Admin.txt');
 		} else {
 			$view->setTemplatePathAndFilename($templateFile);
-			}
+		}
 		$view->assign('settings', $this->settings);
 		$view->assign('sendForm', $sendForm);
-					'sendForm' => $sendForm,
+
 		$adminMailContent = $view->render();
 
 		return MailUtility::sendMail(
@@ -108,10 +108,15 @@ class DynamicFormController extends ActionController {
 			$this->settings['mailSettings']['adminMail']['subject'],
 			$adminMailContent
 		);
-		}
+	}
+
+	/**
 	 * @param SendForm $sendForm
 	 * @return bool
+	 */
 	protected function sendCustomerMail(SendForm $sendForm) {
+		$view = $this->objectManager->get('TYPO3\CMS\Fluid\View\StandaloneView');
+
 		$templateFile = $this->settings['mailSettings']['customerMail']['templateFile'];
 		if (!$templateFile || !is_readable($templateFile)) {
 			$view->setTemplatePathAndFilename(ExtensionManagementUtility::extPath('me_dynamic_form') . 'Resources/Private/Templates/Mails/Customer.txt');
@@ -146,4 +151,22 @@ class DynamicFormController extends ActionController {
 		}
 	}
 
+	protected function generateSendFormModel() {
+		if ($this->request->hasArgument('fields')) {
+			$fields = $this->request->getArgument('fields');
+			/** @var \MoveElevator\MeDynamicForm\Domain\Model\SendForm' $sendForm */
+			$sendForm = $this->objectManager->get('\MoveElevator\MeDynamicForm\Domain\Model\SendForm');
+			$sendForm->setForm($this->settings['formName']);
+			$fields['currentForm'] = $this->settings['formName'];
+			foreach ($fields as $field => $value) {
+				$sendForm->setValueByField($field, $value);
+			}
+			$this->request->setArguments(
+				array(
+					'sendForm' => $sendForm,
+					'fields' => $fields
+				)
+			);
+		}
+	}
 }

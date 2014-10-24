@@ -55,7 +55,7 @@ class SendForm extends AbstractBaseModel {
 	 * @param string $fieldName
 	 * @return mixed
 	 */
-	protected function getValueByField($fieldName) {
+	public function getValueByField($fieldName) {
 		$value = NULL;
 		/**  @var \MoveElevator\MeDynamicForm\Domain\Model\SendFormData $field */
 		foreach ($this->fields as $field) {
