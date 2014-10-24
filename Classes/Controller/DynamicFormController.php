@@ -77,6 +77,78 @@ class DynamicFormController extends ActionController {
 	}
 
 	/**
+	 * @param \MoveElevator\MeDynamicForm\Domain\Model\SendForm $sendForm
+	 */
+	protected function sendEmails(SendForm $sendForm) {
+		//@todo make emails better readable and format values
+		if ($this->settings['mailSettings']['adminMail']['enabled'] === '1') {
+			$this->sendAdminMail($sendForm);
+		}
+
+		if ($this->settings['mailSettings']['customerMail']['enabled'] === '1') {
+			$this->sendCustomerMail($sendForm);
+		}
+	}
+
+	/**
+	 * @param \MoveElevator\MeDynamicForm\Domain\Model\SendForm $sendForm
+	 * @return bool
+	 */
+	protected function sendAdminMail(SendForm $sendForm) {
+		$view = $this->objectManager->get('TYPO3\CMS\Fluid\View\StandaloneView');
+
+		$templateFile = $this->settings['mailSettings']['adminMail']['templateFile'];
+		if (!$templateFile || !is_readable($templateFile)) {
+			$view->setTemplatePathAndFilename(ExtensionManagementUtility::extPath('me_dynamic_form') . 'Resources/Private/Templates/Mails/Admin.txt');
+		} else {
+			$view->setTemplatePathAndFilename($templateFile);
+		}
+		$view->assign('settings', $this->settings);
+		$view->assign('sendForm', $sendForm);
+
+		$adminMailContent = $view->render();
+
+		return MailUtility::sendMail(
+			$this->settings['mailSettings']['adminMail']['receiver'],
+			$this->settings['mailSettings']['adminMail']['from'],
+			$this->settings['mailSettings']['adminMail']['subject'],
+			$adminMailContent
+		);
+	}
+
+	/**
+	 * @param SendForm $sendForm
+	 * @return bool
+	 */
+	protected function sendCustomerMail(SendForm $sendForm) {
+		$view = $this->objectManager->get('TYPO3\CMS\Fluid\View\StandaloneView');
+
+		$templateFile = $this->settings['mailSettings']['customerMail']['templateFile'];
+		if (!$templateFile || !is_readable($templateFile)) {
+			$view->setTemplatePathAndFilename(ExtensionManagementUtility::extPath('me_dynamic_form') . 'Resources/Private/Templates/Mails/Customer.txt');
+		} else {
+			$view->setTemplatePathAndFilename($templateFile);
+		}
+
+		$salutationFields = explode(',', $this->settings['mailSettings']['customerMail']['salutationFields']);
+		$salutation = '';
+		foreach ($salutationFields as $salutationField) {
+			$salutation .= $sendForm->getValueByField($salutationField) . ' ';
+		}
+
+		$view->assign('settings', $this->settings);
+		$view->assign('sendForm', $sendForm);
+		$view->assign('salutation', trim($salutation));
+		$customerMailContent = $view->render();
+		return MailUtility::sendMail(
+			$sendForm->getValueByField($this->settings['mailSettings']['customerMail']['receiverField']),
+			$this->settings['mailSettings']['customerMail']['from'],
+			$this->settings['mailSettings']['customerMail']['subject'],
+			$customerMailContent
+		);
+	}
+
+	/**
 	 * @return void
 	 */
 	protected function validateSettings() {
@@ -85,89 +157,4 @@ class DynamicFormController extends ActionController {
 		}
 	}
 
-	/**
-	 * @param \MoveElevator\MeDynamicForm\Domain\Model\SendForm $sendForm
-	 */
-	protected function sendEmails(SendForm $sendForm) {
-		//@todo make emails better readable and format values
-		if ($this->settings['mailSettings']['adminMail']['enabled'] === '1') {
-			$view = $this->objectManager->get('TYPO3\CMS\Fluid\View\StandaloneView');
-
-			$templateFile = $this->settings['mailSettings']['adminMail']['templateFile'];
-			if (!$templateFile || !is_readable($templateFile)) {
-				$view->setTemplatePathAndFilename(ExtensionManagementUtility::extPath('me_dynamic_form') . 'Resources/Private/Templates/Mails/Admin.txt');
-			} else {
-				$view->setTemplatePathAndFilename($templateFile);
-			}
-			$view->assign('settings', $this->settings);
-			$view->assign('sendForm', $sendForm);
-
-			$adminMailContent = $view->render();
-
-			MailUtility::sendMail(
-				$this->settings['mailSettings']['adminMail']['receiver'],
-				$this->settings['mailSettings']['adminMail']['from'],
-				$this->settings['mailSettings']['adminMail']['subject'],
-				$adminMailContent
-			);
-		}
-
-		if ($this->settings['mailSettings']['customerMail']['enabled'] === '1') {
-			$view = $this->objectManager->get('TYPO3\CMS\Fluid\View\StandaloneView');
-
-			$templateFile = $this->settings['mailSettings']['customerMail']['templateFile'];
-			if (!$templateFile || !is_readable($templateFile)) {
-				$view->setTemplatePathAndFilename(ExtensionManagementUtility::extPath('me_dynamic_form') . 'Resources/Private/Templates/Mails/Customer.txt');
-			} else {
-				$view->setTemplatePathAndFilename($templateFile);
-			}
-
-			$salutationFields = explode(',', $this->settings['mailSettings']['customerMail']['salutationFields']);
-			$salutation = '';
-			foreach($salutationFields as $salutationField){
-				$salutation .= $sendForm->getValueByField($salutationField) . ' ';
-			}
-
-			$view->assign('settings', $this->settings);
-			$view->assign('sendForm', $sendForm);
-			$view->assign('salutation', trim($salutation));
-			var_dump($this->settings['mailSettings']['customerMail']['receiverField']);
-			$customerMailContent = $view->render();
-			MailUtility::sendMail(
-				$sendForm->getValueByField($this->settings['mailSettings']['customerMail']['receiverField']),
-				$this->settings['mailSettings']['customerMail']['from'],
-				$this->settings['mailSettings']['customerMail']['subject'],
-				$customerMailContent
-			);
-		}
-	}
-
-	protected function getEmailBody($formData, $addressType) {
-		if (isset($this->settings['mailSettings'][$addressType]['template'])) {
-			/** @var \TYPO3\CMS\Fluid\View\StandaloneView $view */
-			$view = $this->createView($addressType);
-			$view->assign('products', $this->productsInBasket);
-			$view->assign('settings', $this->settings);
-			$view->assign('order', $order);
-
-			return $view->render();
-		}
-
-		return NULL;
-	}
-
-	/**
-	 * @param string $addressType
-	 * @return \TYPO3\CMS\Fluid\View\StandaloneView
-	 */
-	protected function createView($addressType) {
-		$templatePath = PATH_site . $this->settings['mailSettings'][$addressType]['template'];
-		$partialsPath = PATH_site . $this->settings['order']['email']['templates']['partials'];
-		/** @var \TYPO3\CMS\Fluid\View\StandaloneView $view */
-		$view = $this->objectManager->get('TYPO3\CMS\Fluid\View\StandaloneView');
-		$view->setTemplatePathAndFilename($templatePath);
-		$view->setPartialRootPath($partialsPath);
-
-		return $view;
-	}
 }
