@@ -18,6 +18,7 @@ config.tx_extbase{
 						crdate.mapOnProperty = creationDate
 						field.mapOnProperty = field
 						value.mapOnProperty = value
+						form.mapOnProperty = sendForm
 					}
 				}
 			}
@@ -109,18 +110,20 @@ plugin.tx_medynamicform {
 			}
 
 			mailSettings {
-				adminMail = 1
 				adminMail {
 					receiver = sef@move-elevator.de
 					name = Sascha Seyfert
 					from = kickstarter@move-elevator.de
 					subject = Admin-Mail Subject from Kickstarter
+					template = typo3conf/ext/me_dynamicform/Resources/Private/Templates/Mails/AdminMail.html
+					partials = typo3conf/ext/me_dynamicform/Resources/Private/Partials
 				}
-				customerMail = 1
 				customerMail {
 					receiverField = email
 					#receiverTo Name, Concat fields to generate first and last name entry
 					nameField = firstName,name
+					template = typo3conf/ext/me_dynamicform/Resources/Private/Templates/Mails/CustomerMail.html
+					partials = typo3conf/ext/me_shop/Resources/Private/Partials
 				}
 			}
 		}

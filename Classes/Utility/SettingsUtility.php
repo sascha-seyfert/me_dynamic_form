@@ -2,6 +2,9 @@
 
 namespace MoveElevator\MeDynamicForm\Utility;
 
+use \TYPO3\CMS\Core\Utility\GeneralUtility;
+use \TYPO3\CMS\Extbase\Service\TypoScriptService;
+
 /**
  * Class SettingsUtility
  *
@@ -39,5 +42,37 @@ class SettingsUtility {
 		}
 
 		return FALSE;
+	}
+
+	/**
+	 * Gets TS for a plugin
+	 *
+	 * @param string $pluginKey (e.q. tx_metimeline)
+	 * @param string $typoscriptKey (e.q. settings)
+	 *
+	 * @return array|bool
+	 * @throws \TYPO3\CMS\Extbase\Exception
+	 */
+	static public function getTypoScriptSetupByForm($form) {
+
+		$settings = FALSE;
+
+		/** @var \TYPO3\CMS\Extbase\Object\ObjectManager $objectManager */
+		$objectManager = GeneralUtility::makeInstance('TYPO3\CMS\Extbase\Object\ObjectManager');
+
+		/** @var \TYPO3\CMS\Extbase\Configuration\ConfigurationManager $configurationManager */
+		$configurationManager = $objectManager->get('TYPO3\CMS\Extbase\Configuration\ConfigurationManager');
+		$typoScript = $configurationManager->getConfiguration('FullTypoScript');
+
+		if (!is_array($typoScript['plugin.']['tx_medynamicform.']['settings.'])) {
+			throw new Exception('no typoscript setup for plugin.' . $pluginKey, 1352897029);
+		}
+
+		/** @var \TYPO3\CMS\Extbase\Service\TypoScriptService $typoScriptService */
+		$typoScriptService = $objectManager->get('TYPO3\CMS\Extbase\Service\TypoScriptService');
+		$settings = $typoScriptService->convertTypoScriptArrayToPlainArray($typoScript['plugin.']['tx_medynamicform.']['settings.']);
+		$settings['currentForm'] = $form;
+
+		return self::getCurrentFormSettings($settings);
 	}
 }

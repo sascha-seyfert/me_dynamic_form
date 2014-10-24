@@ -3,7 +3,6 @@
 namespace MoveElevator\MeDynamicForm\Domain\Model;
 
 use \TYPO3\CMS\Extbase\Persistence\Generic\Exception\UnsupportedMethodException;
-use \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject;
 use \MoveElevator\MeCleverreach\Utility\SettingsUtility;
 
 /**
@@ -62,7 +61,7 @@ class SendForm extends AbstractBaseModel {
 		/**  @var \MoveElevator\MeDynamicForm\Domain\Model\SendFormData $field */
 		foreach ($this->fields as $field) {
 			if ($field->getField() === $fieldName) {
-				$value = $field->getValue();
+				$value = $field->getPreparedValue();
 			}
 		}
 
@@ -93,6 +92,7 @@ class SendForm extends AbstractBaseModel {
 		if ($valueSaved === FALSE) {
 			/** @var \MoveElevator\MeDynamicForm\Domain\Model\SendFormData $sendFormData */
 			$sendFormData = $this->objectManager->get('MoveElevator\MeDynamicForm\Domain\Model\SendFormData');
+			$sendFormData->setSendForm($this);
 			$sendFormData->setValue($value);
 			$sendFormData->setField($fieldName);
 			$this->fields->attach($sendFormData);
@@ -113,4 +113,3 @@ class SendForm extends AbstractBaseModel {
 		return $this->form;
 	}
 }
-

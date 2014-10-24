@@ -31,6 +31,7 @@ CREATE TABLE tx_medynamicform_domain_model_send_form_data (
 
     value varchar(255) NOT NULL DEFAULT '',
     field varchar(255) NOT NULL DEFAULT '',
+    form int(11) unsigned DEFAULT '0' NOT NULL,
 
     is_dummy_record tinyint(4) unsigned NOT NULL DEFAULT '0',
     tstamp int(11) unsigned DEFAULT '0' NOT NULL,
