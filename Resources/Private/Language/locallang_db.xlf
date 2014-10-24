@@ -3,7 +3,15 @@
     <file source-language="en" datatype="plaintext" original="messages" product-name="me_dynamic_form">
         <header/>
         <body>
-
+            <trans-unit id="flexform.settings">
+                <source>Configuration</source>
+            </trans-unit>
+            <trans-unit id="flexform.currentForm.label">
+                <source>Choose Form</source>
+            </trans-unit>
+            <trans-unit id="spam.calculator.label">
+                <source>Spam Protection: What is</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

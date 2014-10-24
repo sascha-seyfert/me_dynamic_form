@@ -14,6 +14,8 @@
 					  arguments="{formName: settings.formName, fieldName: fieldName, field: field}"/>
 		</f:case>
 		<f:case value="SUBMIT">
+			<f:render partial="Captcha" arguments="{_all}" />
+
 			<f:render partial="SubmitButton"
 					  arguments="{formName: settings.formName, fieldName: fieldName, field: field}"/>
 		</f:case>

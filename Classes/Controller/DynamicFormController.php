@@ -29,6 +29,11 @@ class DynamicFormController extends ActionController {
 
 
 	public function formAction() {
+		if(isset($this->settings['formConfiguration']['spamProtection']['enabled']) && $this->settings['formConfiguration']['spamProtection']['enabled'] === '1'){
+			/** @var \MoveElevator\MeDynamicForm\Service\Captcha $captchaService */
+			$captchaService = $this->objectManager->get('MoveElevator\MeDynamicForm\Service\Captcha', $this->settings['formConfiguration']['spamProtection']);
+			$this->view->assign('captchaVars', $captchaService->getCaptcha());
+		}
 	}
 
 	/**
@@ -47,10 +52,11 @@ class DynamicFormController extends ActionController {
 
 	/**
 	 * @param \MoveElevator\MeDynamicForm\Domain\Model\SendForm $sendForm
+	 * @validate $sendForm MoveElevator.MeDynamicForm:SendFormValidator
 	 * @return void
 	 */
 	public function sendAction(SendForm $sendForm) {
-		\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($sendForm->getName());
+		var_dump($sendForm);
 	}
 
 	/**

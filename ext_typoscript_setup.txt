@@ -73,6 +73,12 @@ plugin.tx_medynamicform {
 				doubleOptIn = 1
 				#which field is used, alternativ idea => fe_user:email or fe_user:username can be used
 				doubleOptInField = email
+
+				spamProtection {
+					enabled = 1
+					#@todo we can implement captchas, questions or simple honeypot
+					type = CALCULATOR
+				}
 			}
 
 			mailSettings {
