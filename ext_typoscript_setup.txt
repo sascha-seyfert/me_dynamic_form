@@ -2,6 +2,8 @@ plugin.tx_medynamicform {
 	settings {
 		myTestForm {
 			formLabel = Testformular 1
+			#shown in BE-Module and maybe in the plugin
+			formTitle = This is my first form
 			formFields {
 				introText {
 					type = DISPLAYTEXT
