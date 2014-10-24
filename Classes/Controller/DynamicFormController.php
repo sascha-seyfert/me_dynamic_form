@@ -17,7 +17,11 @@ use \MoveElevator\MeDynamicForm\Domain\Model\SendForm;
  */
 class DynamicFormController extends ActionController {
 
-	private $formName = '';
+	/**
+	 * @var \MoveElevator\MeDynamicForm\Domain\Repository\SendFormRepository
+	 * @inject
+	 */
+	protected $sendFormRepository;
 
 	/**
 	 * @return void
@@ -51,6 +55,8 @@ class DynamicFormController extends ActionController {
 	 * @return void
 	 */
 	public function sendAction(SendForm $sendForm) {
+
+		$this->sendFormRepository->add($sendForm);
 		\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($sendForm);
 		\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($sendForm->getPrivacyPolicity());
 	}

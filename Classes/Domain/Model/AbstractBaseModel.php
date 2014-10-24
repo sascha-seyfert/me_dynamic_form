@@ -2,14 +2,14 @@
 
 namespace MoveElevator\MeDynamicForm\Domain\Model;
 
-use \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject;
+use \TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
 /**
  * Class SendForm
  *
  * @package MoveElevator\MeDynamicForm\Domain\Model
  */
-abstract class AbstractBaseModel extends AbstractValueObject {
+abstract class AbstractBaseModel extends AbstractEntity {
 	/**
 	 * @var int
 	 */

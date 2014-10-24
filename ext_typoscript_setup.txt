@@ -1,3 +1,30 @@
+config.tx_extbase{
+	persistence{
+		classes{
+			MoveElevator\MeDynamicForm\Domain\Model\SendForm {
+				mapping {
+					tableName = tx_medynamicform_domain_model_send_form
+					columns {
+						crdate.mapOnProperty = creationDate
+						fields.mapOnProperty = fields
+						form.mapOnPropperty = form
+					}
+				}
+			}
+			MoveElevator\MeDynamicForm\Domain\Model\SendFormData {
+				mapping {
+					tableName = tx_medynamicform_domain_model_send_form_data
+					columns {
+						crdate.mapOnProperty = creationDate
+						field.mapOnProperty = field
+						value.mapOnProperty = value
+					}
+				}
+			}
+		}
+	}
+}
+
 plugin.tx_medynamicform {
 	settings {
 		myTestForm {
