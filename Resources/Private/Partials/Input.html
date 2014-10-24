@@ -1,4 +1,5 @@
 <f:render partial="Label" arguments="{_all}"/>
+<f:render partial="FieldError" arguments="{ property: '{fieldName}', objectName: 'fields'}" />
 <f:if condition="{field.addon}">
 	<f:then>
 		<div class="input-group">

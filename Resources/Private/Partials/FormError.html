@@ -1,0 +1,5 @@
+<f:form.validationResults for="{object}">
+	<f:if condition="{validationResults.flattenedErrors}">
+		<f:render partial="FormNotification" arguments="{state:'danger', translationKey: 'Ihre Eingaben konnten nicht gespeichert werden.'}"/>
+	</f:if>
+</f:form.validationResults>

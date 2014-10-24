@@ -43,34 +43,26 @@ class DynamicFormController extends ActionController {
 	 * @return void
 	 */
 	public function initializeSendAction() {
-		if ($this->request->hasArgument('fields')) {
-			/** @var \MoveElevator\MeDynamicForm\Domain\Model\SendForm' $sendForm */
-			$sendForm = $this->objectManager->get('\MoveElevator\MeDynamicForm\Domain\Model\SendForm');
-			$sendForm->setForm($this->settings['formName']);
-			foreach ($this->request->getArgument('fields') as $field => $value) {
-				$sendForm->setValueByField($field, $value);
-			}
-			$this->request->setArgument('sendForm', $sendForm);
-		} else {
+		if ($this->request->hasArgument('fields') === FALSE || !is_array($this->request->getArgument('fields'))) {
 			$this->redirect('form');
 		}
+
+		$this->generateSendFormModel();
 	}
 
 	/**
+	 * @param array $fields
 	 * @param \MoveElevator\MeDynamicForm\Domain\Model\SendForm $sendForm
-	 * @validate $sendForm MoveElevator.MeDynamicForm:SendFormValidator
+	 * @validate $fields MoveElevator.MeDynamicForm:SendFormValidator
 	 * @return void
 	 */
-	public function sendAction(SendForm $sendForm) {
+	public function sendAction(array $fields = array(), SendForm $sendForm) {
+
 		$this->view->assignMultiple(
 			array(
 				'formData' => $sendForm
 			)
 		);
-
-		if ($this->settings['mailSettings']['adminMail']['receiver']) {
-
-		}
 
 		$this->sendFormRepository->add($sendForm);
 	}
@@ -84,32 +76,22 @@ class DynamicFormController extends ActionController {
 		}
 	}
 
-	protected function getEmailBody($formData, $addressType) {
-		if (isset($this->settings['mailSettings'][$addressType]['template'])) {
-			/** @var \TYPO3\CMS\Fluid\View\StandaloneView $view */
-			$view = $this->createView($addressType);
-			$view->assign('products', $this->productsInBasket);
-			$view->assign('settings', $this->settings);
-			$view->assign('order', $order);
-
-			return $view->render();
+	protected function generateSendFormModel() {
+		if ($this->request->hasArgument('fields')) {
+			$fields = $this->request->getArgument('fields');
+			/** @var \MoveElevator\MeDynamicForm\Domain\Model\SendForm' $sendForm */
+			$sendForm = $this->objectManager->get('\MoveElevator\MeDynamicForm\Domain\Model\SendForm');
+			$sendForm->setForm($this->settings['formName']);
+			$fields['currentForm'] = $this->settings['formName'];
+			foreach ($fields as $field => $value) {
+				$sendForm->setValueByField($field, $value);
+			}
+			$this->request->setArguments(
+				array(
+					'sendForm' => $sendForm,
+					'fields' => $fields
+				)
+			);
 		}
-
-		return NULL;
-	}
-
-	/**
-	 * @param string $addressType
-	 * @return \TYPO3\CMS\Fluid\View\StandaloneView
-	 */
-	protected function createView($addressType) {
-		$templatePath = PATH_site . $this->settings['mailSettings'][$addressType]['template'];
-		$partialsPath = PATH_site . $this->settings['order']['email']['templates']['partials'];
-		/** @var \TYPO3\CMS\Fluid\View\StandaloneView $view */
-		$view = $this->objectManager->get('TYPO3\CMS\Fluid\View\StandaloneView');
-		$view->setTemplatePathAndFilename($templatePath);
-		$view->setPartialRootPath($partialsPath);
-
-		return $view;
 	}
 }
