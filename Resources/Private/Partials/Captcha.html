@@ -1,0 +1,13 @@
+<f:if condition="{settings.formConfiguration.spamProtection.enabled} == 1">
+	<div class="input-group">
+		<f:switch expression="{settings.formConfiguration.spamProtection.type}">
+			<f:case value="CALCULATOR">
+				<f:translate key="spam.calculator.label">Spamschutz: Was ergibt</f:translate>
+				{captchaVars.operandOne} {captchaVars.operator} {captchaVars.operandTwo}
+				<input id="{settings.formName}-captcha-result" type="text"
+					   name="tx_medynamicform_dynamicform[fields][captcha-result]"
+					   class="form-control"/>
+			</f:case>
+		</f:switch>
+	</div>
+</f:if>
