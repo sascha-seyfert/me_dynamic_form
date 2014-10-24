@@ -1,0 +1,3 @@
+<f:for each="{settings.formFields}" as="settingsField" key="settingsFieldKey">
+	<f:for each="{sendForm.fields}" as="sendField"><f:if condition="{settingsFieldKey}=={sendField.field}">{settingsField.label}: {sendField.value}</f:if></f:for>
+</f:for>

@@ -57,7 +57,6 @@ class SendForm extends AbstractBaseModel {
 	 */
 	protected function getValueByField($fieldName) {
 		$value = NULL;
-
 		/**  @var \MoveElevator\MeDynamicForm\Domain\Model\SendFormData $field */
 		foreach ($this->fields as $field) {
 			if ($field->getField() === $fieldName) {
@@ -111,5 +110,12 @@ class SendForm extends AbstractBaseModel {
 	 */
 	public function getForm() {
 		return $this->form;
+	}
+
+	/**
+	 * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage
+	 */
+	public function getFields(){
+		return $this->fields;
 	}
 }
