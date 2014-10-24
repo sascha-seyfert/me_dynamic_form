@@ -1,6 +1,6 @@
-config.tx_extbase{
-	persistence{
-		classes{
+config.tx_extbase {
+	persistence {
+		classes {
 			MoveElevator\MeDynamicForm\Domain\Model\SendForm {
 				mapping {
 					tableName = tx_medynamicform_domain_model_send_form
@@ -111,19 +111,22 @@ plugin.tx_medynamicform {
 
 			mailSettings {
 				adminMail {
+					#templateFile = fileadmin/...../AdminMail.txt
+					enabled = 1
 					receiver = sef@move-elevator.de
-					name = Sascha Seyfert
 					from = kickstarter@move-elevator.de
 					subject = Admin-Mail Subject from Kickstarter
 					template = typo3conf/ext/me_dynamicform/Resources/Private/Templates/Mails/AdminMail.html
 					partials = typo3conf/ext/me_dynamicform/Resources/Private/Partials
 				}
 				customerMail {
+					#templateFile = fileadmin/...../CustomerMail.txt
+					enabled = 1
 					receiverField = email
 					#receiverTo Name, Concat fields to generate first and last name entry
-					nameField = firstName,name
-					template = typo3conf/ext/me_dynamicform/Resources/Private/Templates/Mails/CustomerMail.html
-					partials = typo3conf/ext/me_shop/Resources/Private/Partials
+					salutationFields = firstName,name
+					from = kickstarter@move-elevator.de
+					subject = Customer-Mail Subject from Kickstarter
 				}
 			}
 		}
